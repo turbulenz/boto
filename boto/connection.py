@@ -710,10 +710,10 @@ class AWSAuthConnection(object):
                 # so I have to fake it out
                 if request.method == 'HEAD' and getattr(response, 'chunked', False):
                     response.chunked = 0
-                if response.status == 500 or response.status == 503:
+                if response.status == 500 or response.status == 503 or response.status == 400:
                     boto.log.debug('received %d response, retrying in %d seconds' % (response.status, 2 ** i))
                     body = response.read()
-                elif response.status < 300 or response.status >= 400 or \
+                elif response.status < 300 or response.status > 400 or \
                         not location:
                     self.put_http_connection(request.host, self.is_secure, connection)
                     return response
